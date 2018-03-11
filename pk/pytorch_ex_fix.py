@@ -6,8 +6,6 @@ import torch.nn.functional as F
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-import sys
-sys.path.append('../cutnorm')
 
 import cutnorm
 from cutnorm import tools, compute_cutnorm
@@ -21,12 +19,21 @@ def build_linear_lr_model(input_dim, output_dim):
     return model
 
 
-def build_deep_lr_model(input_dim, output_dim):
-    hidden_dim = input_dim
+def build_deep_lr_model(input_dim,
+                        output_dim,
+                        num_hidden,
+                        hidden_dim=input_dim):
     model = torch.nn.Sequential()
-    model.add_module("linear1", torch.nn.Linear(input_dim, hidden_dim))
-    model.add_module("relu1", torch.nn.ReLU())
-    model.add_module("linear2", torch.nn.Linear(hidden_dim, output_dim))
+    if num_hidden > 0:
+        model.add_module("input", torch.nn.Linear(input_dim, hidden_dim))
+        model.add_module("input tanh", torch.nn.Tanh())
+        for i in range(num_hidden):
+            model.add_module("linear" + str(i),
+                             torch.nn.Linear(hidden_dim, hidden_dim))
+            model.add_module("tanh" + str(i), torch.nn.Tanh())
+        model.add_module("output", torch.nn.Linear(hidden_dim, output_dim))
+    else:
+        model.add_module("input", torch.nn.Linear(hidden_dim, output_dim))
     return model
 
 
