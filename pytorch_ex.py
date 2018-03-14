@@ -17,7 +17,7 @@ def build_model(input_dim, output_dim):
     # We don't need the softmax layer here since CrossEntropyLoss already
     # uses it internally.
     model = torch.nn.Sequential()
-    model.add_module("linear", torch.nn.Linear(input_dim, output_dim, bias=False))
+    model.add_module("linear", torch.nn.Linear(input_dim, output_dim))
     return model
 
 
@@ -44,6 +44,7 @@ def train(model, loss, optimizer, x_val, y_val):
 def predict(model, x_val):
     x = Variable(x_val, requires_grad=False)
     output = model.forward(x)
+    print(output.data.numpy().argmax(axis=1))
     return output.data.numpy().argmax(axis=1)
 
 
