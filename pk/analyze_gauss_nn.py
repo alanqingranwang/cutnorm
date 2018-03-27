@@ -19,9 +19,11 @@ def compute_data_corr_penult(model, gauss_data):
 
     # Create vector for feature extraction
     penult_embedding = torch.zeros((n_samples, n_features))
+    print('penult_embedding: ', penult_embedding.size())
 
     # def function to copy output
     def copy_data(m, i, o):
+        print('o', o.size())
         penult_embedding.copy_(o.data)
 
     # Attach function as hook to layer
