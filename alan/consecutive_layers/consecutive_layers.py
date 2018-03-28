@@ -54,7 +54,7 @@ def predict(model, x_val):
 def acc(pred_y, test_y):
     return np.equal(pred_y, test_y).all(axis=1).sum() / len(pred_y)
 
-def train_model(data_container, n_hidden=0, n_epochs_train=100, n_batches=10):
+def train_model(data_container, n_hidden=0, n_epochs_train=1000, n_batches=10):
     # Extract data
     n_features = data_container.n_features
     n_samples = data_container.n_samples

@@ -44,14 +44,14 @@ def compute_data_corr_penult(model, gauss_data):
         h = layer.register_forward_hook(copy_data)
         output = model.forward(x)
         h.remove()
-        corrcoef_list.append(layer_embedding.numpy())
+        corrcoef_list.append(np.corrcoef(layer_embedding.numpy()))
     #h = penult_layer.register_forward_hook(copy_data)
 
     #output = model.forward(x)
 
     # Remove hook
     #h.remove()
-
+    print(np.array(corrcoef_list[0]).shape)
     return corrcoef_list
 
 
