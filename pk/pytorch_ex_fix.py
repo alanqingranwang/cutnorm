@@ -22,7 +22,9 @@ def build_linear_lr_model(input_dim, output_dim):
 def build_deep_lr_model(input_dim,
                         output_dim,
                         num_hidden,
-                        hidden_dim=input_dim):
+                        hidden_dim=None):
+    if hidden_dim == None:
+        hidden_dim = input_dim
     model = torch.nn.Sequential()
     if num_hidden > 0:
         model.add_module("input", torch.nn.Linear(input_dim, hidden_dim))
@@ -66,7 +68,7 @@ def predict(model, x_val):
 
 
 def main():
-    # Generate tain and test data
+    # Generate train and test data
     X, Y = make_classification(
         n_samples=1000,
         n_features=10,
@@ -80,12 +82,13 @@ def main():
 
     n_examples, n_features = trX.size()
     n_classes = 1
-    model = build_linear_lr_model(n_features, n_classes)
+    num_hidden = 2
+    model = build_deep_lr_model(n_features, n_classes, num_hidden)
     loss = torch.nn.BCEWithLogitsLoss(size_average=True)
     optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
     batch_size = 50
 
-    for i in range(10):
+    for i in range(100):
         cost = 0.
         num_batches = n_examples // batch_size
         for k in range(num_batches):
