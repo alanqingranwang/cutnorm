@@ -12,7 +12,7 @@ def compute_data_corr_penult(model, gauss_data):
     *_, penult_layer, output_layer = model.modules()
 
     # Create var for input
-    limit = 100
+    limit = 1000
     x = Variable(
         torch.from_numpy(gauss_data.X[:limit]).float(), requires_grad=False)
     n_samples, n_features = x.size()
@@ -32,15 +32,19 @@ def compute_data_corr_penult(model, gauss_data):
     # Remove hook
     h.remove()
 
-    return np.corrcoef(penult_embedding.numpy())
+    return np.corrcoef(penult_embedding.numpy().transpose())
 
 
 def process_models(models_params_list, gauss_data):
     processed_data = []
+    limit = 1000
+    orig_data_corrcoef = np.corrcoef(gauss_data.X[:limit].transpose())
     for config in models_params_list:
         print("Processing config n_hidden = ", config['n_hidden'])
         acc = []
         corr_mat = []
+        # Original data
+        corr_mat.append(orig_data_corrcoef)
         for model_state in config['models_params']:
             # Load model
             model = train_gauss_nn.build_deep_lr_model(gauss_data.n_features,
